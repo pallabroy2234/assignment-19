@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model category {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  title     String   @db.VarChar(100)
+  metaTitle String   @db.VarChar(100)
+  slug      String   @db.VarChar(100)
+  content   String   @db.VarChar(100)
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model user {
+  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  firstName    String    @db.VarChar(100)
+  middleName   String    @db.VarChar(100)
+  lastName     String    @db.VarChar(100)
+  mobile       String    @db.VarChar(100)
+  email        String    @unique
+  password     String    @db.VarChar(100)
+  admin        Boolean   @default(true)
+  registeredAt DateTime  @default(now()) @db.Timestamp(0)
+  lastLogin    DateTime  @default(now()) @db.Timestamp(0)
+  createdAt    DateTime  @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime  @default(now()) @updatedAt
+  cart         cart[]
+  product      product[]
+  order        order[]
+}
+
+model cart {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  title      String   @db.VarChar(100)
+  sessionId  String   @db.VarChar(100)
+  token      String   @db.VarChar(100)
+  status     String   @db.VarChar(100)
+  firstName  String   @db.VarChar(100)
+  middleName String   @db.VarChar(100)
+  lastName   String   @db.VarChar(100)
+  mobile     String   @db.VarChar(100)
+  email      String   @db.VarChar(100)
+  city       String   @db.VarChar(100)
+  country    String   @db.VarChar(100)
+  userId     BigInt   @db.UnsignedBigInt
+  user       user     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  createdAt  DateTime @default(now()) @db.Timestamp(0)
+  updatedAt  DateTime @default(now()) @updatedAt
+}
+
+model order {
+  id           BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  title        String   @db.VarChar(100)
+  token        String   @db.VarChar(100)
+  subTotal     Int
+  itemDiscount Int
+  tax          Int
+  total        Int
+  discount     Int
+  grandTotal   Int
+  firstName    String   @db.VarChar(100)
+  middleName   String   @db.VarChar(100)
+  lastName     String   @db.VarChar(100)
+  mobile       String   @db.VarChar(100)
+  email        String   @db.VarChar(100)
+  city         String   @db.VarChar(100)
+  country      String   @db.VarChar(100)
+  userId       BigInt   @db.UnsignedBigInt
+  user         user     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  createdAt    DateTime @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime @default(now()) @updatedAt
+}
+
+model product {
+  id             BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
+  fistName       String           @db.VarChar(100)
+  metaTitle      String           @db.VarChar(100)
+  slug           String           @db.VarChar(100)
+  summary        String           @db.VarChar(100)
+  price          Int
+  discount       Int
+  userId         BigInt           @db.UnsignedBigInt
+  user           user             @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  publishedAt    DateTime         @default(now()) @db.Timestamp(0)
+  startsAt       DateTime         @default(now()) @db.Timestamp(0)
+  endsAt         DateTime         @default(now()) @db.Timestamp(0)
+  createdAt      DateTime         @default(now()) @db.Timestamp(0)
+  updatedAt      DateTime         @default(now()) @updatedAt
+  product_meta   product_meta[]
+  product_review product_review[]
+}
+
+model product_meta {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  key       String   @db.VarChar(100)
+  content   String   @db.VarChar(100)
+  productId BigInt   @db.UnsignedBigInt
+  product   product  @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model product_review {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  title     String   @db.VarChar(100)
+  rating    String   @db.VarChar(100)
+  content   String   @db.VarChar(100)
+  productId BigInt   @db.UnsignedBigInt
+  product   product  @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @updatedAt
+}
