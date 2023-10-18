@@ -138,8 +138,6 @@ export const DELETE = async (req, res) => {
                 }
             }
         })
-        
-        
         const deleteCart = prisma.cart.delete({
             where: {
                 id: id

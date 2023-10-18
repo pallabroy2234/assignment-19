@@ -31,8 +31,8 @@ model user {
   createdAt    DateTime  @default(now()) @db.Timestamp(0)
   updatedAt    DateTime  @default(now()) @updatedAt
   cart         cart[]
-  product      product[]
   order        order[]
+  product      product[]
 }
 
 model cart {
@@ -49,9 +49,9 @@ model cart {
   city       String   @db.VarChar(100)
   country    String   @db.VarChar(100)
   userId     BigInt   @db.UnsignedBigInt
-  user       user     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   createdAt  DateTime @default(now()) @db.Timestamp(0)
   updatedAt  DateTime @default(now()) @updatedAt
+  user       user     @relation(fields: [userId], references: [id])
 }
 
 model order {
@@ -72,9 +72,9 @@ model order {
   city         String   @db.VarChar(100)
   country      String   @db.VarChar(100)
   userId       BigInt   @db.UnsignedBigInt
-  user         user     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   createdAt    DateTime @default(now()) @db.Timestamp(0)
   updatedAt    DateTime @default(now()) @updatedAt
+  user         user     @relation(fields: [userId], references: [id])
 }
 
 model product {
@@ -86,12 +86,12 @@ model product {
   price          Int
   discount       Int
   userId         BigInt           @db.UnsignedBigInt
-  user           user             @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  publishedAt    DateTime         @default(now()) @db.Timestamp(0)
-  startsAt       DateTime         @default(now()) @db.Timestamp(0)
-  endsAt         DateTime         @default(now()) @db.Timestamp(0)
+  publishedAt    DateTime?        @db.Timestamp(0)
+  startsAt       DateTime?        @db.Timestamp(0)
+  endsAt         DateTime?        @db.Timestamp(0)
   createdAt      DateTime         @default(now()) @db.Timestamp(0)
   updatedAt      DateTime         @default(now()) @updatedAt
+  user           user             @relation(fields: [userId], references: [id])
   product_meta   product_meta[]
   product_review product_review[]
 }
@@ -101,9 +101,9 @@ model product_meta {
   key       String   @db.VarChar(100)
   content   String   @db.VarChar(100)
   productId BigInt   @db.UnsignedBigInt
-  product   product  @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   createdAt DateTime @default(now()) @db.Timestamp(0)
   updatedAt DateTime @default(now()) @updatedAt
+  product   product  @relation(fields: [productId], references: [id])
 }
 
 model product_review {
@@ -112,7 +112,7 @@ model product_review {
   rating    String   @db.VarChar(100)
   content   String   @db.VarChar(100)
   productId BigInt   @db.UnsignedBigInt
-  product   product  @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   createdAt DateTime @default(now()) @db.Timestamp(0)
   updatedAt DateTime @default(now()) @updatedAt
+  product   product  @relation(fields: [productId], references: [id])
 }
